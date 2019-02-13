@@ -11,6 +11,8 @@ type Host struct {
 	PublicIpv4  string
 	PublicIpv6  string
 	PublicName  string
+	Private     string // Either ip or name, the one accessible on current cloud
+	Public      string
 }
 
 type CloudResolver interface {
