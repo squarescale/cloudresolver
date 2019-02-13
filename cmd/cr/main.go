@@ -40,12 +40,18 @@ func main() {
 		if len(provider) > 0 {
 			fmt.Printf("Provider: %s\n", provider[0].Provider)
 			for _, host := range provider {
-				fmt.Printf("\tprivate ipv4: %s\n", host.PrivateIpv4)
-				fmt.Printf("\tpublic ipv4: %s\n", host.PublicIpv4)
-				fmt.Printf("\tprivate ipv6: %s\n", host.PrivateIpv6)
-				fmt.Printf("\tpublic ipv6: %s\n", host.PrivateIpv6)
-				fmt.Printf("\tprivate name: %s\n", host.PrivateName)
-				fmt.Printf("\tpublic name: %s\n\n", host.PrivateName)
+				fmt.Printf("\tId: \t\t%s\n", host.Id)
+				fmt.Printf("\tRegion: \t%s\n", host.Region)
+				fmt.Printf("\tZone: \t\t%s\n", host.Zone)
+				fmt.Printf("\tprivate ipv4: \t%s\n", host.PrivateIpv4)
+				fmt.Printf("\tpublic ipv4: \t%s\n", host.PublicIpv4)
+				fmt.Printf("\tprivate ipv6: \t%s\n", host.PrivateIpv6)
+				fmt.Printf("\tpublic ipv6: \t%s\n", host.PublicIpv6)
+				fmt.Printf("\tprivate name: \t%s\n", host.PrivateName)
+				fmt.Printf("\tpublic name: \t%s\n", host.PublicName)
+				fmt.Printf("\tprivate: \t%s\n", host.Private)
+				fmt.Printf("\tpublic: \t%s\n", host.Public)
+				fmt.Println("")
 			}
 		}
 	}
