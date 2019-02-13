@@ -17,7 +17,6 @@ func init() {
 }
 
 func (r AwsResolver) Resolve(name string, config map[string]interface{}) ([]Host, error) {
-	log.Printf("in aws: %+v\n", Resolvers["do"])
 	log.Info("starting aws")
 	// on EC2, linux, kvm, this file contains "Amazon EC2"
 	vendor, _ := ioutil.ReadFile("/sys/devices/virtual/dmi/id/sys_vendor")
@@ -64,6 +63,7 @@ func (r AwsResolver) Resolve(name string, config map[string]interface{}) ([]Host
 				PrivateIpv4: *inst.PrivateIpAddress,
 				PrivateName: *inst.PrivateDnsName,
 				PublicName:  *inst.PublicDnsName,
+				Private:     *inst.PrivateIpAddress,
 				Public:      *inst.PublicDnsName,
 			}
 			hosts = append(hosts, h)
