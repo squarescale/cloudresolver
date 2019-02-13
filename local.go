@@ -5,7 +5,7 @@ import log "github.com/sirupsen/logrus"
 type LocalResolver struct{}
 
 func init() {
-	register(new(LocalResolver))
+	register("local", new(LocalResolver))
 }
 
 func (r LocalResolver) Resolve(name string, config map[string]interface{}) ([]Host, error) {

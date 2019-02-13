@@ -26,7 +26,7 @@ func (t *TokenSource) Token() (*oauth2.Token, error) {
 type DigitalOceanResolver struct{}
 
 func init() {
-	register(new(DigitalOceanResolver))
+	register("do", new(DigitalOceanResolver))
 }
 
 type YamlToken struct {

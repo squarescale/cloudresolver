@@ -13,10 +13,11 @@ import (
 type AwsResolver struct{}
 
 func init() {
-	register(new(AwsResolver))
+	register("aws", new(AwsResolver))
 }
 
 func (r AwsResolver) Resolve(name string, config map[string]interface{}) ([]Host, error) {
+	log.Printf("in aws: %+v\n", Resolvers["do"])
 	log.Info("starting aws")
 	// on EC2, linux, kvm, this file contains "Amazon EC2"
 	vendor, _ := ioutil.ReadFile("/sys/devices/virtual/dmi/id/sys_vendor")

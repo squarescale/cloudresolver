@@ -17,7 +17,7 @@ type GceResolver struct {
 }
 
 func init() {
-	register(new(GceResolver))
+	register("gce", new(GceResolver))
 }
 
 func client(path string) (*http.Client, error) {

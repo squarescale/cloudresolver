@@ -17,8 +17,11 @@ type CloudResolver interface {
 	Resolve(string, map[string]interface{}) ([]Host, error)
 }
 
-var Resolvers []CloudResolver
+var Resolvers map[string]CloudResolver
 
-func register(provider CloudResolver) {
-	Resolvers = append(Resolvers, provider)
+func register(name string, provider CloudResolver) {
+	if len(Resolvers) == 0 {
+		Resolvers = make(map[string]CloudResolver)
+	}
+	Resolvers[name] = provider
 }
