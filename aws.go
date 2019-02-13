@@ -64,6 +64,7 @@ func (r AwsResolver) Resolve(name string, config map[string]interface{}) ([]Host
 				PrivateIpv4: *inst.PrivateIpAddress,
 				PrivateName: *inst.PrivateDnsName,
 				PublicName:  *inst.PublicDnsName,
+				Public:      *inst.PublicDnsName,
 			}
 			hosts = append(hosts, h)
 		}

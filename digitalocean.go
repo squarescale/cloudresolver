@@ -80,6 +80,8 @@ func (r DigitalOceanResolver) Resolve(name string, config map[string]interface{}
 				PublicIpv4:  publicIpv4,
 				PrivateIpv4: privateIpv4,
 				PublicIpv6:  publicIpv6,
+				Private:     privateIpv4,
+				Public:      publicIpv4,
 			}
 			hosts = append(hosts, h)
 		}
