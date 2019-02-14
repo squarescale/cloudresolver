@@ -3,7 +3,6 @@ package cloudresolver
 import (
 	"context"
 	"fmt"
-	log "github.com/sirupsen/logrus"
 	"github.com/spf13/viper"
 	"golang.org/x/oauth2"
 	"golang.org/x/oauth2/google"
@@ -41,34 +40,29 @@ func client(path string) (*http.Client, error) {
 func (r GceResolver) Resolve(name string, config map[string]interface{}) ([]Host, error) {
 	v := viper.New()
 	err := v.MergeConfigMap(config)
-	log.Printf("v: %+v\n", v)
 
 	if err != nil {
-		log.Printf("v: %+v\n", v)
-		log.Printf("err: %+v\n", err)
 		return []Host{}, err
 	}
 
 	client, err := client(os.Getenv("GOOGLE_APPLICATION_CREDENTIALS"))
 	if err != nil {
-		log.Printf("%+v\n", err)
 		return []Host{}, err
 	}
 
 	creds, err := google.FindDefaultCredentials(context.TODO(), "")
 	if err != nil {
-		log.Printf("%+v\n", err)
+		fmt.Printf("%+v\n", err)
+		return []Host{}, err
 	}
 
 	service, err := compute.New(client)
 	if err != nil {
-		log.Printf("%+v\n", err)
 		return []Host{}, err
 	}
 
 	res, err := service.Instances.Get(creds.ProjectID, v.GetString("providers.gce.zone"), name).Do()
 	if err != nil {
-		log.Printf("%+v\n", err)
 		return []Host{}, err
 	}
 
@@ -76,13 +70,17 @@ func (r GceResolver) Resolve(name string, config map[string]interface{}) ([]Host
 		return []Host{}, err
 	}
 
+	fmt.Printf("%+v\n", res.NetworkInterfaces)
+	fmt.Printf("%T\n", res.NetworkInterfaces)
+
 	h := Host{
 		Provider:    "gce",
-		Zone:        res.Zone,
-		Id:          fmt.Sprintf("%s", res.Id),
+		Zone:        v.GetString("providers.gce.zone"),
+		Id:          fmt.Sprintf("%d", res.Id),
+		PublicIpv4:  res.NetworkInterfaces[0].AccessConfigs[0].NatIP,
+		Public:      res.NetworkInterfaces[0].AccessConfigs[0].NatIP,
 		PrivateIpv4: res.NetworkInterfaces[0].NetworkIP,
-		//PrivateName: *inst.PrivateDnsName,
-		//PublicName:  *inst.PublicDnsName,
+		Private:     res.NetworkInterfaces[0].NetworkIP,
 	}
 
 	return []Host{h}, err
