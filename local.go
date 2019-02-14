@@ -1,7 +1,5 @@
 package cloudresolver
 
-import log "github.com/sirupsen/logrus"
-
 type LocalResolver struct{}
 
 func init() {
@@ -9,7 +7,6 @@ func init() {
 }
 
 func (r LocalResolver) Resolve(name string, config map[string]interface{}) ([]Host, error) {
-	log.Info("starting local")
 	h := Host{
 		Provider:    "local",
 		Zone:        "local",

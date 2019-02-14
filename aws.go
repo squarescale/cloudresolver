@@ -5,7 +5,6 @@ import (
 	"github.com/aws/aws-sdk-go/aws"
 	"github.com/aws/aws-sdk-go/aws/session"
 	"github.com/aws/aws-sdk-go/service/ec2"
-	log "github.com/sirupsen/logrus"
 	"io/ioutil"
 	"os"
 )
@@ -17,7 +16,6 @@ func init() {
 }
 
 func (r AwsResolver) Resolve(name string, config map[string]interface{}) ([]Host, error) {
-	log.Info("starting aws")
 	// on EC2, linux, kvm, this file contains "Amazon EC2"
 	vendor, _ := ioutil.ReadFile("/sys/devices/virtual/dmi/id/sys_vendor")
 	if !bytes.Equal([]byte("Amazon EC2"), vendor) {

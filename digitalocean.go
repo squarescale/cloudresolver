@@ -5,7 +5,6 @@ import (
 	"context"
 	"fmt"
 	"github.com/digitalocean/godo"
-	log "github.com/sirupsen/logrus"
 	"golang.org/x/oauth2"
 	"io/ioutil"
 	"os"
@@ -34,7 +33,6 @@ type YamlToken struct {
 }
 
 func (r DigitalOceanResolver) Resolve(name string, config map[string]interface{}) ([]Host, error) {
-	log.Info("starting do")
 	var config_home string
 	if xdgPath := os.Getenv("XDG_CONFIG_HOME"); xdgPath != "" {
 		config_home = filepath.Join(xdgPath, "doctl")

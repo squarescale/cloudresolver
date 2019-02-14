@@ -23,7 +23,6 @@ func main() {
 		panic(fmt.Sprintf("could not unmarshal config: %#v", err))
 	}
 
-	fmt.Printf("config in main:%+v\n", config)
 	ch := make(chan []cloudresolver.Host)
 	for _, resolver := range cloudresolver.Resolvers {
 		go resolve(os.Args[1], resolver, ch, config)
