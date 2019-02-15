@@ -52,7 +52,6 @@ func (r GceResolver) Resolve(name string, config map[string]interface{}) ([]Host
 
 	creds, err := google.FindDefaultCredentials(context.TODO(), "")
 	if err != nil {
-		fmt.Printf("%+v\n", err)
 		return []Host{}, err
 	}
 
@@ -69,9 +68,6 @@ func (r GceResolver) Resolve(name string, config map[string]interface{}) ([]Host
 	if len(res.NetworkInterfaces) == 0 || res.NetworkInterfaces[0].NetworkIP == "" {
 		return []Host{}, err
 	}
-
-	fmt.Printf("%+v\n", res.NetworkInterfaces)
-	fmt.Printf("%T\n", res.NetworkInterfaces)
 
 	h := Host{
 		Provider:    "gce",
