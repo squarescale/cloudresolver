@@ -45,13 +45,15 @@ func (r DigitalOceanResolver) Resolve(name string, config map[string]interface{}
 	var docfg map[string]interface{}
 	yf, err := ioutil.ReadFile(doctlcfg)
 	if err != nil {
-		fmt.Printf("Get err   #%v ", err)
+		return []Host{}, err
 	}
 
 	err = yaml.Unmarshal(yf, &docfg)
 	if err != nil {
 		fmt.Printf("Unmarshal: %v", err)
 	}
+
+	fmt.Printf("%+v\n", docfg)
 
 	tokenSource := &TokenSource{
 		AccessToken: docfg["access-token"].(string),
