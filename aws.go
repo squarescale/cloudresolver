@@ -2,11 +2,12 @@ package cloudresolver
 
 import (
 	"bytes"
+	"io/ioutil"
+	"os"
+
 	"github.com/aws/aws-sdk-go/aws"
 	"github.com/aws/aws-sdk-go/aws/session"
 	"github.com/aws/aws-sdk-go/service/ec2"
-	"io/ioutil"
-	"os"
 )
 
 type AwsResolver struct{}
@@ -56,6 +57,7 @@ func (r AwsResolver) Resolve(name string, config map[string]interface{}) ([]Host
 		for _, inst := range resp.Reservations[idx].Instances {
 			h := Host{
 				Provider:    "aws",
+				Region:      *sess.Config.Region,
 				Zone:        *inst.Placement.AvailabilityZone,
 				Id:          *inst.InstanceId,
 				PrivateIpv4: *inst.PrivateIpAddress,
