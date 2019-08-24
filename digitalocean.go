@@ -1,14 +1,16 @@
 package cloudresolver
 
-import "gopkg.in/yaml.v2"
 import (
 	"context"
 	"fmt"
-	"github.com/digitalocean/godo"
-	"golang.org/x/oauth2"
 	"io/ioutil"
 	"os"
 	"path/filepath"
+
+	"golang.org/x/oauth2"
+	"gopkg.in/yaml.v2"
+
+	"github.com/digitalocean/godo"
 )
 
 type TokenSource struct {
@@ -50,10 +52,8 @@ func (r DigitalOceanResolver) Resolve(name string, config map[string]interface{}
 
 	err = yaml.Unmarshal(yf, &docfg)
 	if err != nil {
-		fmt.Printf("Unmarshal: %v", err)
+		return []Host{}, err
 	}
-
-	fmt.Printf("%+v\n", docfg)
 
 	tokenSource := &TokenSource{
 		AccessToken: docfg["access-token"].(string),
@@ -68,20 +68,20 @@ func (r DigitalOceanResolver) Resolve(name string, config map[string]interface{}
 
 	hosts := []Host{}
 	for _, droplet := range droplets {
-
 		if droplet.Name == name {
 			publicIpv4, _ := droplet.PublicIPv4()
 			privateIpv4, _ := droplet.PrivateIPv4()
 			publicIpv6, _ := droplet.PublicIPv6()
 			h := Host{
-				Provider:    "digitalocean",
-				Region:      droplet.Region.Slug,
-				Id:          fmt.Sprintf("%v", droplet.ID),
-				PublicIpv4:  publicIpv4,
-				PrivateIpv4: privateIpv4,
-				PublicIpv6:  publicIpv6,
-				Private:     privateIpv4,
-				Public:      publicIpv4,
+				InstanceName: name,
+				Provider:     "digitalocean",
+				Region:       droplet.Region.Slug,
+				Id:           fmt.Sprintf("%v", droplet.ID),
+				PublicIpv4:   publicIpv4,
+				PrivateIpv4:  privateIpv4,
+				PublicIpv6:   publicIpv6,
+				Private:      privateIpv4,
+				Public:       publicIpv4,
 			}
 			hosts = append(hosts, h)
 		}
