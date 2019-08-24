@@ -55,16 +55,23 @@ func (r AwsResolver) Resolve(name string, config map[string]interface{}) ([]Host
 	hosts := []Host{}
 	for idx, _ := range resp.Reservations {
 		for _, inst := range resp.Reservations[idx].Instances {
+			iname := ""
+			for _, tag := range inst.Tags {
+				if *tag.Key == "Name" {
+					iname = *tag.Value
+				}
+			}
 			h := Host{
-				Provider:    "aws",
-				Region:      *sess.Config.Region,
-				Zone:        *inst.Placement.AvailabilityZone,
-				Id:          *inst.InstanceId,
-				PrivateIpv4: *inst.PrivateIpAddress,
-				PrivateName: *inst.PrivateDnsName,
-				PublicName:  *inst.PublicDnsName,
-				Private:     *inst.PrivateIpAddress,
-				Public:      *inst.PublicDnsName,
+				InstanceName: iname,
+				Provider:     "aws",
+				Region:       *sess.Config.Region,
+				Zone:         *inst.Placement.AvailabilityZone,
+				Id:           *inst.InstanceId,
+				PrivateIpv4:  *inst.PrivateIpAddress,
+				PrivateName:  *inst.PrivateDnsName,
+				PublicName:   *inst.PublicDnsName,
+				Private:      *inst.PrivateIpAddress,
+				Public:       *inst.PublicDnsName,
 			}
 			hosts = append(hosts, h)
 		}
