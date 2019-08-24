@@ -3,13 +3,16 @@ package cloudresolver
 import (
 	"context"
 	"fmt"
-	"github.com/spf13/viper"
-	"golang.org/x/oauth2"
-	"golang.org/x/oauth2/google"
-	compute "google.golang.org/api/compute/v1"
 	"io/ioutil"
 	"net/http"
 	"os"
+
+	"golang.org/x/oauth2"
+	"golang.org/x/oauth2/google"
+
+	compute "google.golang.org/api/compute/v1"
+
+	"github.com/spf13/viper"
 )
 
 type GceResolver struct {
@@ -70,15 +73,15 @@ func (r GceResolver) Resolve(name string, config map[string]interface{}) ([]Host
 	}
 
 	h := Host{
-		Provider:    "gce",
-		Zone:        v.GetString("providers.gce.zone"),
-		Id:          fmt.Sprintf("%d", res.Id),
-		PublicIpv4:  res.NetworkInterfaces[0].AccessConfigs[0].NatIP,
-		Public:      res.NetworkInterfaces[0].AccessConfigs[0].NatIP,
-		PrivateIpv4: res.NetworkInterfaces[0].NetworkIP,
-		Private:     res.NetworkInterfaces[0].NetworkIP,
+		InstanceName: res.Name,
+		Provider:     "gce",
+		Zone:         v.GetString("providers.gce.zone"),
+		Id:           fmt.Sprintf("%d", res.Id),
+		PublicIpv4:   res.NetworkInterfaces[0].AccessConfigs[0].NatIP,
+		Public:       res.NetworkInterfaces[0].AccessConfigs[0].NatIP,
+		PrivateIpv4:  res.NetworkInterfaces[0].NetworkIP,
+		Private:      res.NetworkInterfaces[0].NetworkIP,
 	}
 
 	return []Host{h}, err
-
 }
