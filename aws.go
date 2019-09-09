@@ -29,27 +29,46 @@ func (r AwsResolver) Resolve(name string, config map[string]interface{}) ([]Host
 	}))
 	svc := ec2.New(sess)
 
-	filters := []*ec2.Filter{
-		// builtin filter, the purpose is connecting to hosts, they need to be running
-		&ec2.Filter{
-			Name:   aws.String("instance-state-name"),
-			Values: []*string{aws.String("running")},
+	// Primary filter on instance state (running) and Name TAG
+	params := &ec2.DescribeInstancesInput{
+		Filters: []*ec2.Filter{
+			{
+				Name:   aws.String("instance-state-name"),
+				Values: []*string{aws.String("running")},
+			},
+			{
+				Name:   aws.String("tag:Name"),
+				Values: []*string{aws.String(name)},
+			},
 		},
 	}
-
-	f := &ec2.Filter{
-		Name:   aws.String("tag:Name"),
-		Values: []*string{aws.String(name)},
-	}
-	filters = append(filters, f)
-
-	params := &ec2.DescribeInstancesInput{
-		Filters: filters,
-	}
-
+	// Do the lookup
 	resp, err := svc.DescribeInstances(params)
 	if err != nil {
+		// Return the error to caller
 		return []Host{}, err
+	}
+
+	// No match found, try secondary filter on instance state (running) and ID
+	if len(resp.Reservations) == 0 {
+		params := &ec2.DescribeInstancesInput{
+			Filters: []*ec2.Filter{
+				{
+					Name:   aws.String("instance-state-name"),
+					Values: []*string{aws.String("running")},
+				},
+				{
+					Name:   aws.String("instance-id"),
+					Values: []*string{aws.String(name)},
+				},
+			},
+		}
+		// Do the lookup
+		resp, err = svc.DescribeInstances(params)
+		if err != nil {
+			// Return the error to caller
+			return []Host{}, err
+		}
 	}
 
 	hosts := []Host{}
