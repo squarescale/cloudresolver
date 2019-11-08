@@ -71,6 +71,28 @@ func (r AwsResolver) Resolve(name string, config map[string]interface{}) ([]Host
 		}
 	}
 
+	// No match found, try tertiary filter on instance state (running) and private IP
+	if len(resp.Reservations) == 0 {
+		params := &ec2.DescribeInstancesInput{
+			Filters: []*ec2.Filter{
+				{
+					Name:   aws.String("instance-state-name"),
+					Values: []*string{aws.String("running")},
+				},
+				{
+					Name:   aws.String("private-ip-address"),
+					Values: []*string{aws.String(name)},
+				},
+			},
+		}
+		// Do the lookup
+		resp, err = svc.DescribeInstances(params)
+		if err != nil {
+			// Return the error to caller
+			return []Host{}, err
+		}
+	}
+
 	hosts := []Host{}
 	for idx, _ := range resp.Reservations {
 		for _, inst := range resp.Reservations[idx].Instances {
