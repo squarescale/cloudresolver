@@ -97,10 +97,12 @@ func (r AwsResolver) Resolve(name string, config map[string]interface{}) ([]Host
 	for idx, _ := range resp.Reservations {
 		for _, inst := range resp.Reservations[idx].Instances {
 			iname := ""
+			tags := make(map[string]string)
 			for _, tag := range inst.Tags {
 				if *tag.Key == "Name" {
 					iname = *tag.Value
 				}
+				tags[*tag.Key] = *tag.Value
 			}
 			h := Host{
 				InstanceName: iname,
@@ -113,6 +115,7 @@ func (r AwsResolver) Resolve(name string, config map[string]interface{}) ([]Host
 				PublicName:   *inst.PublicDnsName,
 				Private:      *inst.PrivateIpAddress,
 				Public:       *inst.PublicDnsName,
+				Tags:         tags,
 			}
 			hosts = append(hosts, h)
 		}
