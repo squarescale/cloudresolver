@@ -14,6 +14,7 @@ type Host struct {
 	PublicName   string
 	Private      string // Either ip or name, the one accessible on current cloud
 	Public       string
+	Tags         map[string]string
 }
 
 type CloudResolver interface {
