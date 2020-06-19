@@ -106,6 +106,7 @@ func (r AwsResolver) Resolve(name string, config map[string]interface{}) ([]Host
 			}
 			h := Host{
 				InstanceName: iname,
+				MachineType:  *inst.InstanceType,
 				Provider:     "aws",
 				Region:       *sess.Config.Region,
 				Zone:         *inst.Placement.AvailabilityZone,
