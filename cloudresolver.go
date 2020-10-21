@@ -15,6 +15,7 @@ type Host struct {
 	Private      string // Either ip or name, the one accessible on current cloud
 	Public       string
 	MachineType  string
+	LaunchTime   string
 	Tags         map[string]string
 }
 

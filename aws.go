@@ -116,6 +116,7 @@ func (r AwsResolver) Resolve(name string, config map[string]interface{}) ([]Host
 				PublicName:   *inst.PublicDnsName,
 				Private:      *inst.PrivateIpAddress,
 				Public:       *inst.PublicDnsName,
+				LaunchTime:   (*inst.LaunchTime).UTC().Format("2006-01-02 15:04:05"),
 				Tags:         tags,
 			}
 			hosts = append(hosts, h)
