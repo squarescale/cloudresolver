@@ -1,6 +1,6 @@
 module github.com/squarescale/cloudresolver
 
-go 1.14
+go 1.16
 
 require (
 	cloud.google.com/go v0.70.0 // indirect
